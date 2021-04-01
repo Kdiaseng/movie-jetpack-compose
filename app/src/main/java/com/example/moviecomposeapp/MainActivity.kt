@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -24,15 +23,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.moviecomposeapp.data.bookService
+import com.example.moviecomposeapp.data.Movie
+import com.example.moviecomposeapp.data.movieService
 import com.example.moviecomposeapp.ui.theme.MovieComposeAppTheme
 
 class MainActivity : ComponentActivity() {
 
     private val viewModel by viewModels<MainViewModel> {
-        object : ViewModelProvider.Factory{
+        object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return MainViewModel(bookService) as T
+                return MainViewModel(movieService) as T
             }
 
         }
@@ -44,50 +44,13 @@ class MainActivity : ComponentActivity() {
             MovieComposeAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    val movies = listOf(
-                        Movie(
-                            "https://is4-ssl.mzstatic.com/image/thumb/Video114/v4/c0/2d/58/c02d5833-f421-03b8-e9e7-7e05b5f8ff03/pr_source.lsr/200x200bb.png",
-                            "The Vault",
-                            "2021-03-26"
-                        ),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                        Movie("url", "The Vault", "2021-03-26"),
-                    )
+                   
 
-                    ListMovie(movies = movies)
                 }
             }
         }
     }
 }
-
-
-data class Movie(val image: String, val name: String, val date: String)
 
 
 @Composable
@@ -121,7 +84,7 @@ fun ItemMovie(movie: Movie) {
             Text(style = MaterialTheme.typography.h6, text = movie.name)
             Text(
                 style = MaterialTheme.typography.subtitle2,
-                text = movie.date,
+                text = movie.releaseDate,
                 color = Color.Gray,
                 fontSize = 12.sp
             )

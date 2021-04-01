@@ -4,9 +4,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 
-interface BookService {
+interface MovieService {
     @GET("/")
-    suspend fun getBooks(): ResultBook
+    suspend fun getMovies(): ResultMovie
 }
 
 val retrofit: Retrofit = Retrofit.Builder()
@@ -15,4 +15,4 @@ val retrofit: Retrofit = Retrofit.Builder()
     .build()
 
 
-val bookService: BookService = retrofit.create(BookService::class.java)
+val movieService: MovieService = retrofit.create(MovieService::class.java)

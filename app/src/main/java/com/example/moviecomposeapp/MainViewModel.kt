@@ -5,22 +5,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.moviecomposeapp.data.Book
-import com.example.moviecomposeapp.data.BookService
+import com.example.moviecomposeapp.data.Movie
+import com.example.moviecomposeapp.data.MovieService
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val bookService: BookService
+    private val movieService: MovieService
 ) : ViewModel() {
 
-    private val _booksLiveData = MutableLiveData<List<Book>>()
-    val bookLiveData: LiveData<List<Book>> = _booksLiveData
+    private val _moviesLiveData = MutableLiveData<List<Movie>>()
+    val movieLiveData: LiveData<List<Movie>> = _moviesLiveData
 
-    fun getBooks() {
+    fun getMovies() {
         viewModelScope.launch {
             try {
-                val booksResponse = bookService.getBooks()
-                _booksLiveData.value = booksResponse.results
+                val moviesResponse = movieService.getMovies()
+                _moviesLiveData.value = moviesResponse.results
             } catch (ex: Exception) {
                 Log.e("Service Error", ex.toString())
             }

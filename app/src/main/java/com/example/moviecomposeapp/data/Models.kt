@@ -1,12 +1,13 @@
 package com.example.moviecomposeapp.data
 
 
-class ResultBook(val results: List<Book>)
+class ResultMovie(val results: List<Movie>)
 
-class Book(
+class Movie(
     val id: String,
     val artistName: String,
     val releaseDate: String,
     val kind: String,
-    val artworkUrl100: String
+    val artworkUrl100: String,
+    val name: String
 )
