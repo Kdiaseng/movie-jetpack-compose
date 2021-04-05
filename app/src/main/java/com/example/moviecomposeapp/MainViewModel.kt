@@ -10,7 +10,7 @@ import com.example.moviecomposeapp.data.MovieService
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val movieService: MovieService
+    private val repository: MainRepository
 ) : ViewModel() {
 
     private val _moviesLiveData = MutableLiveData<List<Movie>>()
@@ -19,8 +19,8 @@ class MainViewModel(
     fun getMovies() {
         viewModelScope.launch {
             try {
-                val moviesResponse = movieService.getMovies()
-                _moviesLiveData.value = moviesResponse.results
+                val moviesResponse = repository.getMovies()
+                _moviesLiveData.value = moviesResponse.feed.results
             } catch (ex: Exception) {
                 Log.e("Service Error", ex.toString())
             }

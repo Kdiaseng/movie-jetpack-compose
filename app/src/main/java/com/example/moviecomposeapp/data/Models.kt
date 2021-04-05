@@ -1,6 +1,8 @@
 package com.example.moviecomposeapp.data
 
 
+class Response(val feed:ResultMovie)
+
 class ResultMovie(val results: List<Movie>)
 
 class Movie(

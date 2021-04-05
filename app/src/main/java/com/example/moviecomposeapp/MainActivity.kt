@@ -1,60 +1,77 @@
 package com.example.moviecomposeapp
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.moviecomposeapp.data.Movie
-import com.example.moviecomposeapp.data.movieService
 import com.example.moviecomposeapp.ui.theme.MovieComposeAppTheme
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<MainViewModel> {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return MainViewModel(movieService) as T
-            }
-
-        }
+    private val viewModel by lazy {
+        ViewModelProvider(this, MainFactory(MainRepository()))
+            .get(MainViewModel::class.java)
     }
+
+//    private val viewModel by viewModels<MainViewModel>() {
+//        object : ViewModelProvider.Factory {
+//            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+//                return MainViewModel(movieService) as T
+//            }
+//
+//        }
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MovieComposeAppTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                   
-
-                }
+                ListMovie(moviesData = viewModel.movieLiveData)
             }
         }
+        viewModel.getMovies()
     }
+
 }
 
 
 @Composable
-fun ListMovie(movies: List<Movie>) {
+fun ListMovie(moviesData: LiveData<List<Movie>>) {
+    val movies by moviesData.observeAsState(emptyList())
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier
@@ -81,6 +98,11 @@ fun ItemMovie(movie: Movie) {
                 .height(200.dp), horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+            val imageModifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+                .clip(RoundedCornerShape(4.dp))
+            RemoteImage(uri = movie.artworkUrl100, modifier = imageModifier)
             Text(style = MaterialTheme.typography.h6, text = movie.name)
             Text(
                 style = MaterialTheme.typography.subtitle2,
@@ -92,6 +114,33 @@ fun ItemMovie(movie: Movie) {
         }
     }
 
+}
+
+@Composable
+fun ShowText(text: String) {
+    Text(text = text, style = MaterialTheme.typography.h6)
+}
+
+
+@Composable
+fun RemoteImage(uri: String, modifier: Modifier = Modifier) {
+    val bitmapState = remember { mutableStateOf<Bitmap?>(null) }
+    Glide.with(LocalContext.current).asBitmap().load(uri).into(
+        object : CustomTarget<Bitmap>() {
+            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                bitmapState.value = resource
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+
+            }
+
+        }
+    )
+
+    bitmapState.value?.let {
+        Image(bitmap = it.asImageBitmap(), contentDescription = "", modifier = modifier)
+    }
 }
 
 
