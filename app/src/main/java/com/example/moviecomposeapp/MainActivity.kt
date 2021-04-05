@@ -47,14 +47,6 @@ class MainActivity : ComponentActivity() {
             .get(MainViewModel::class.java)
     }
 
-//    private val viewModel by viewModels<MainViewModel>() {
-//        object : ViewModelProvider.Factory {
-//            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-//                return MainViewModel(movieService) as T
-//            }
-//
-//        }
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,12 +107,6 @@ fun ItemMovie(movie: Movie) {
     }
 
 }
-
-@Composable
-fun ShowText(text: String) {
-    Text(text = text, style = MaterialTheme.typography.h6)
-}
-
 
 @Composable
 fun RemoteImage(uri: String, modifier: Modifier = Modifier) {
